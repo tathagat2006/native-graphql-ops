@@ -20,6 +20,7 @@
   "homepage": "https://github.com/tathagat2006/GraphQL-basic-schemas_queries#readme",
   "dependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
+    "babel-preset-env": "^1.7.0",
+    "graphql-yoga": "^1.14.10"
   }
 }

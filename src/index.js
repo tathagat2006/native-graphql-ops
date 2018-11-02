@@ -11,3 +11,7 @@ console.log(getGreeting('Tathagat'))
 //challenge test
 console.log(additionFunction(2,3))
 console.log(subtract(9,6))
+
+//Main App code starts here
+
+import { GrapgQLServer } from 'graphql-yoga'
