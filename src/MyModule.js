@@ -6,8 +6,13 @@ const name = 'Tathagat'
 // create a variable for default export
 const location = 'Delhi'
 
+const getGreeting = (name) => {
+    return `Welcome to the course ${name}`
+}
+
 export {
     location as default,
     name,
     message,
+    getGreeting,
 }
