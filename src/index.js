@@ -43,6 +43,7 @@ import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 const typeDefs = `
     type Query {
         greeting(name: String): String!
+        grades: [Int!]!
         me: User!
         post: Post!
     }
@@ -99,6 +100,9 @@ const resolvers = {
     // }
 
     Query: {
+        grades(parent,args,ctx,info) {
+            return [99,80,93,78]
+        },
         greeting(parent,args,ctx,info) {
             console.log(args)
             if(args.name) {
