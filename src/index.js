@@ -16,6 +16,7 @@ console.log(subtract(9,6))
 
 //Main App code starts here
 
+//Demo user data
 const users = [
     {
         id: '1',
@@ -36,24 +37,29 @@ const users = [
     }
 ]
 
+//Demo posts data
+
 const posts = [
     {
         id: 'p1',
         title: 'post1',
         body: 'this is my first post',
-        published: true
+        published: true,
+        author: '1',
     },
     {
         id: 'p2',
         title: 'post2',
         body: 'this is my second post',
-        published: false
+        published: false,
+        author: '1',
     },
     {
         id: 'p3',
         title: 'post3',
         body: 'this is my third post in a row',
-        published: true
+        published: true,
+        author: '2',
     },
 ]
 
@@ -104,6 +110,7 @@ const typeDefs = `
         title: String!
         body: String!
         published: Boolean!
+        author: User!
     }
 `
 
@@ -199,6 +206,13 @@ const resolvers = {
                 body: '',
                 published: false,
             }
+        }
+    },
+    Post: {
+        author(parent,args,ctx,info) {
+            return users.find((user) => {
+                return user.id === parent.author
+            })
         }
     }
 }
