@@ -63,6 +63,25 @@ const posts = [
     },
 ]
 
+const comments = [
+    {
+        id: 'c1',
+        text: 'this is an awesome comment',
+    },
+    {
+        id: 'c2',
+        text: 'this is another awesome comment',
+    },
+    {
+        id: 'c3',
+        text: 'this is another amazing comment',
+    },
+    {
+        id: 'c4',
+        text: 'fantabulous comment',
+    }
+]
+
 import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 
 //Type definitions(schema)
@@ -89,6 +108,7 @@ import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 //Using custom types
 const typeDefs = `
     type Query {
+        comments(query: String): [Comment!]!
         users(query: String): [User!]!
         posts(query:String): [Post]!
         greeting(name: String): String!
@@ -112,6 +132,11 @@ const typeDefs = `
         body: String!
         published: Boolean!
         author: User!
+    }
+
+    type Comment {
+        id: ID!
+        text: String!
     }
 `
 
@@ -152,6 +177,9 @@ const resolvers = {
     // }
 
     Query: {
+        comments(parent,args,ctx,info) {
+            return comments
+        },
         posts(parent,args,ctx,info) {
             if(!args.query) {
                 return posts
