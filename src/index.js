@@ -29,13 +29,27 @@ import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 // `
 
 //Using 5 Scalar types
+// const typeDefs = `
+//     type Query {
+//         id: ID!
+//         name: String!
+//         age: Int!
+//         employed: Boolean!
+//         gpa: Float
+//     }
+// `
+
+//Using custom types
 const typeDefs = `
     type Query {
+        me: User!
+    }
+
+    type User {
         id: ID!
         name: String!
-        age: Int!
-        employed: Boolean!
-        gpa: Float
+        email: String!
+        age: Int
     }
 `
 
@@ -57,22 +71,33 @@ const resolvers = {
     //     }
     // }
 
+    // Query: {
+    //     id() {
+    //         return 'abc123'
+    //     },
+    //     name() {
+    //         return 'Tathagat'
+    //     }, 
+    //     age() {
+    //         return 21
+    //     },
+    //     employed() {
+    //         return false
+    //     },
+    //     gpa() {
+    //         return null
+    //     },
+    // }
+
     Query: {
-        id() {
-            return 'abc123'
-        },
-        name() {
-            return 'Tathagat'
-        }, 
-        age() {
-            return 21
-        },
-        employed() {
-            return false
-        },
-        gpa() {
-            return null
-        },
+        me() {
+            return {
+                id:'123456',
+                name: 'Tathagat',
+                email: 'tathagat@example.com',
+                age:21,
+            }
+        }
     }
 }
 
