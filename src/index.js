@@ -16,6 +16,26 @@ console.log(subtract(9,6))
 
 //Main App code starts here
 
+const users = [
+    {
+        id: '1',
+        name: 'Tathagat',
+        email: 'tathagat@example.com',
+        age: 21
+    },
+    {
+        id: '2',
+        name: 'Mike',
+        email: 'mike@example.com',
+        age: 23
+    },
+    {
+        id: '3',
+        name: 'Andrew',
+        email: 'andrew@example.com',
+    }
+]
+
 import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 
 //Type definitions(schema)
@@ -42,6 +62,7 @@ import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 //Using custom types
 const typeDefs = `
     type Query {
+        users(query: String): [User!]!
         greeting(name: String): String!
         add(numbers: [Float!]!): Float!
         grades: [Int!]!
@@ -101,6 +122,15 @@ const resolvers = {
     // }
 
     Query: {
+        users(parent,args,ctx,info) {
+            if(args.query) {
+                return users.filter((user) => {
+                    return user.name.toLowerCase().includes(args.query.toLowerCase())
+                })
+            }else {
+                return users
+            }
+        },
         grades(parent,args,ctx,info) {
             return [99,80,93,78]
         },
