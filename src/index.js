@@ -87,6 +87,7 @@ const comments = [
 ]
 
 import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
+import uuidv4 from 'uuid/v4'
 
 //Type definitions(schema)
 // const typeDefs = `
@@ -248,7 +249,25 @@ const resolvers = {
     },
     Mutation: {
         createUser(parent,args,ctx,info) {
-            console.log(args)
+            // console.log(args)
+            const emailTaken = users.some((user) => {
+                return user.email === args.email
+            })
+            if(emailTaken) {
+                throw new Error('Email already taken!!')
+            }
+
+            const user = {
+                id:uuidv4(),
+                name: args.name,
+                email: args.email,
+                age: args.age,
+            }
+            users.push(user)
+
+            return user
+
+
         }
     },
     Post: {
