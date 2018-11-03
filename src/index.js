@@ -271,7 +271,23 @@ const resolvers = {
 
         },
         createPost(parent,args,ctx,info) {
-            
+            const userExist = users.some((user) => {
+                return user.id === args.author
+            })
+
+            if(!userExist) {
+                throw new Error('User not found..')
+            }
+            const post = {
+                id: uuidv4(),
+                title: args.title,
+                body: args.body,
+                published: args.published,
+                author: args.author,
+            }
+
+            posts.push(post)
+            return post
         }
     },
     Post: {
