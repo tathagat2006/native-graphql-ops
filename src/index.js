@@ -42,6 +42,7 @@ import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 //Using custom types
 const typeDefs = `
     type Query {
+        greeting(name: String): String!
         me: User!
         post: Post!
     }
@@ -98,6 +99,14 @@ const resolvers = {
     // }
 
     Query: {
+        greeting(parent,args,ctx,info) {
+            console.log(args)
+            if(args.name) {
+                return `Hello, ${args.name}!`
+            }else{
+                return 'Hello'
+            }
+        },
         me() {
             return {
                 id:'123456',
