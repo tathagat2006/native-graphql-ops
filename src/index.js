@@ -36,6 +36,27 @@ const users = [
     }
 ]
 
+const posts = [
+    {
+        id: 'p1',
+        title: 'post1',
+        body: 'this is my first post',
+        published: true
+    },
+    {
+        id: 'p2',
+        title: 'post2',
+        body: 'this is my second post',
+        published: false
+    },
+    {
+        id: 'p3',
+        title: 'post3',
+        body: 'this is my third post in a row',
+        published: true
+    },
+]
+
 import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 
 //Type definitions(schema)
@@ -63,6 +84,7 @@ import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 const typeDefs = `
     type Query {
         users(query: String): [User!]!
+        posts(query:String): [Post]!
         greeting(name: String): String!
         add(numbers: [Float!]!): Float!
         grades: [Int!]!
@@ -122,6 +144,17 @@ const resolvers = {
     // }
 
     Query: {
+        posts(parent,args,ctx,info) {
+            if(!args.query) {
+                return posts
+            }else {
+                return posts.filter((post) => {
+                    const isTitleMatch = post.title.toLowerCase().includes(args.query.toLowerCase())
+                    const isBodyMatch = post.body.toLowerCase().includes(args.query.toLowerCase())
+                    return isTitleMatch || isBodyMatch
+                })
+            }
+        },
         users(parent,args,ctx,info) {
             if(args.query) {
                 return users.filter((user) => {
