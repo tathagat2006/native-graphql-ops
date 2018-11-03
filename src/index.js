@@ -43,6 +43,7 @@ import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 const typeDefs = `
     type Query {
         me: User!
+        post: Post!
     }
 
     type User {
@@ -50,6 +51,13 @@ const typeDefs = `
         name: String!
         email: String!
         age: Int
+    }
+
+    type Post {
+        id: ID!
+        title: String!
+        body: String!
+        published: Boolean!
     }
 `
 
@@ -96,6 +104,14 @@ const resolvers = {
                 name: 'Tathagat',
                 email: 'tathagat@example.com',
                 age:21,
+            }
+        },
+        post() {
+            return {
+                id: '123@post',
+                title: 'My first post',
+                body: '',
+                published: false,
             }
         }
     }
