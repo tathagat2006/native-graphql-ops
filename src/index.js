@@ -261,9 +261,7 @@ const resolvers = {
 
             const user = {
                 id:uuidv4(),
-                name: args.name,
-                email: args.email,
-                age: args.age,
+                ...args
             }
             users.push(user)
 
@@ -304,9 +302,7 @@ const resolvers = {
             }
             const comment = {
                 id:uuidv4(),
-                text: args.text,
-                author: args.author,
-                post: args.post,
+                ...args
             }
             comments.push(comment)
             return post
