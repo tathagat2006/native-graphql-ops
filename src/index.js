@@ -124,8 +124,8 @@ const typeDefs = `
     }
 
     type Mutation {
-        createUser(data: CreateUserInput): User!
-        createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
+        createUser(data: CreateUserInput!): User!
+        createPost(data: CreatePostInput!): Post!
         createComment(text: String!, author: ID!, post: ID!): Comment!
     }
 
@@ -133,6 +133,13 @@ const typeDefs = `
         name: String!
         email: String!
         age: Int
+    }
+
+    input CreatePostInput: {
+        titile: String!
+        body: String!
+        published: Boolean!
+        author: ID!
     }
 
     type User {
@@ -277,7 +284,7 @@ const resolvers = {
         },
         createPost(parent,args,ctx,info) {
             const userExist = users.some((user) => {
-                return user.id === args.author
+                return user.id === args.data.author
             })
 
             if(!userExist) {
@@ -285,10 +292,10 @@ const resolvers = {
             }
             const post = {
                 id: uuidv4(),
-                title: args.title,
-                body: args.body,
-                published: args.published,
-                author: args.author,
+                title: args.data.title,
+                body: args.data.body,
+                published: args.data.published,
+                author: args.data.author,
             }
 
             posts.push(post)
