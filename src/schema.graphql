@@ -43,6 +43,7 @@ type User {
     email: String!
     age: Int
     posts: [Post!]!
+    comments: [Comment!]!
 }
 
 type Post {
@@ -51,10 +52,12 @@ type Post {
     body: String!
     published: Boolean!
     author: User!
+    comments: [Comment!]!
 }
 
 type Comment {
     id: ID!
     text: String!
     author: User!
+    post: Post!
 }
