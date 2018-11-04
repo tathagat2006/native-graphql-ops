@@ -17,6 +17,7 @@ console.log(subtract(9,6))
 //Main App code starts here
 import { GraphQLServer } from 'graphql-yoga' //to create a graphql server
 import uuidv4 from 'uuid/v4'
+import db from './db'
 
 //Type definitions(schema)
 // const typeDefs = `
@@ -81,33 +82,33 @@ const resolvers = {
     // }
 
     Query: {
-        comments(parent,args,ctx,info) {
-            return comments
+        comments(parent,args,{ db },info) {
+            return db.comments
         },
-        posts(parent,args,ctx,info) {
+        posts(parent,args,{ db },info) {
             if(!args.query) {
-                return posts
+                return db.posts
             }else {
-                return posts.filter((post) => {
+                return db.posts.filter((post) => {
                     const isTitleMatch = post.title.toLowerCase().includes(args.query.toLowerCase())
                     const isBodyMatch = post.body.toLowerCase().includes(args.query.toLowerCase())
                     return isTitleMatch || isBodyMatch
                 })
             }
         },
-        users(parent,args,ctx,info) {
+        users(parent,args,{ db },info) {
             if(args.query) {
-                return users.filter((user) => {
+                return db.users.filter((user) => {
                     return user.name.toLowerCase().includes(args.query.toLowerCase())
                 })
             }else {
-                return users
+                return db.users
             }
         },
-        grades(parent,args,ctx,info) {
+        grades(parent,args,{ db },info) {
             return [99,80,93,78]
         },
-        add(parent,args,ctx,info) {
+        add(parent,args,{ db },info) {
             if(args.numbers.length === 0) {
                 return 0
             }
@@ -116,7 +117,7 @@ const resolvers = {
                 return accumulator + currentValue
             })
         },
-        greeting(parent,args,ctx,info) {
+        greeting(parent,args,{ db },info) {
             console.log(args)
             if(args.name) {
                 return `Hello, ${args.name}!`
@@ -142,9 +143,9 @@ const resolvers = {
         }
     },
     Mutation: {
-        createUser(parent,args,ctx,info) {
+        createUser(parent,args,{ db },info) {
             // console.log(args)
-            const emailTaken = users.some((user) => {
+            const emailTaken = db.users.some((user) => {
                 return user.email === args.data.email
             })
             if(emailTaken) {
@@ -155,39 +156,39 @@ const resolvers = {
                 id:uuidv4(),
                 ...args.data
             }
-            users.push(user)
+            db.users.push(user)
 
             return user
 
 
         },
-        deleteUser(parent,args,ctx,info) {
-            const userIdx = users.findIndex((user) => {
+        deleteUser(parent,args,{ db },info) {
+            const userIdx = db.users.findIndex((user) => {
                 return user.id === args.id
             })
             if(userIdx === -1) {
                 throw new Error("User not found...")
             }
 
-           const deletedUsers = users.splice(userIdx, 1)
+           const deletedUsers = db.users.splice(userIdx, 1)
            //delete all associated posts
-           posts = posts.filter((post) => {
+           posts = db.posts.filter((post) => {
                const match = post.author === args.id
                if(match) {
-                   comments = comments.filter((comment) => {
+                   comments = db.comments.filter((comment) => {
                        comment.post !== post.id
                    })
                    return !match
                }
            })
-           comments = comments.filter((comment) => {
+           comments = db.comments.filter((comment) => {
                return comment.author !== args.id
            })
            return deletedUsers[0]
 
         },
-        createPost(parent,args,ctx,info) {
-            const userExist = users.some((user) => {
+        createPost(parent,args,{ db },info) {
+            const userExist = db.users.some((user) => {
                 return user.id === args.data.author
             })
 
@@ -202,18 +203,18 @@ const resolvers = {
                 author: args.data.author,
             }
 
-            posts.push(post)
+            db.posts.push(post)
             return post
         },
-        deletePost(parent,args,ctx,info) {
+        deletePost(parent,args,{ db },info) {
             const postIdx = post.findIndex((post) => {
                 return post.id === args.id
             })
             if(postIdx === -1) {
                 throw new Error('Post not found..')
             }
-            const deletedPost = posts.splice(postIdx, 1)
-            const comments = comments.filter((comment) => {
+            const deletedPost = db.posts.splice(postIdx, 1)
+            const comments = db.comments.filter((comment) => {
                 return comment.post !== args.id
             })
             
@@ -221,23 +222,23 @@ const resolvers = {
 
 
         },
-        deleteComment(parent, args, ctx, info) {
-            const commentIndex = comments.findIndex((comment) => comment.id === args.id)
+        deleteComment(parent, args, { db }, info) {
+            const commentIndex = db.comments.findIndex((comment) => comment.id === args.id)
 
             if (commentIndex === -1) {
                 throw new Error('Comment not found')
             }
 
-            const deletedComments = comments.splice(commentIndex, 1)
+            const deletedComments = db.comments.splice(commentIndex, 1)
 
             return deletedComments[0]
         },
-        createComment(parent,args,ctx,info) {
-            const userExist = users.some((user) => {
+        createComment(parent,args,{ db },info) {
+            const userExist = db.users.some((user) => {
                 return user.id === args.data.author
             })
 
-            const postExist = posts.some((post) => {
+            const postExist = db.posts.some((post) => {
                 return post.id === args.data.post && post.published
             })
 
@@ -248,27 +249,27 @@ const resolvers = {
                 id:uuidv4(),
                 ...args.data
             }
-            comments.push(comment)
+            db.comments.push(comment)
             return post
         }
     },
     Post: {
-        author(parent,args,ctx,info) {
-            return users.find((user) => {
+        author(parent,args,{ db },info) {
+            return db.users.find((user) => {
                 return user.id === parent.author
             })
         }
     },
     User: {
-        posts(parent,args,ctx,info) {
-            return posts.filter((post) => {
+        posts(parent,args,{ db },info) {
+            return db.posts.filter((post) => {
                 return post.author === parent.id
             })
         }
     },
     Comment: {
-        author(parent,args,ctx,info) {
-            return users.find((user) => {
+        author(parent,args,{ db },info) {
+            return db.users.find((user) => {
                 return user.id === parent.author
             })
         }
@@ -279,7 +280,10 @@ const resolvers = {
 
 const server = new GraphQLServer({
     typeDefs: './src/schema.graphql',
-    resolvers
+    resolvers,
+    context: {
+        db,
+    }
 })
 
 server.start(() => {
