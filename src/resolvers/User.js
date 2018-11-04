@@ -10,3 +10,5 @@ comments(parent,args,{ db },info) {
     })
 }
 }
+
+export { User as default }
