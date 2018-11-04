@@ -53,21 +53,21 @@ updateUser(parent, args, { db }, info) {
     if(!user) {
         throw new Error("User not found..")
     }
-    if(typeof data.email === "string") {
+    if(typeof args.data.email === "string") {
         const emailTaken = db.users.some((user) => {
-            return user.email === data.email
+            return user.email === args.data.email
             if(emailTaken) {
                 throw new Error('Email in use..')
             }
 
-            user.email = data.email
+            user.email = args.data.email
         })
     }
-    if(typeof data.name === 'string') {
-        user.name = data.name
+    if(typeof args.data.name === 'string') {
+        user.name = args.data.name
     }
-    if(typeof data.age !== 'undefined' ) {
-        user.age = data.age
+    if(typeof args.data.age !== 'undefined' ) {
+        user.age = args.data.age
     }
 
     return user
