@@ -90,13 +90,7 @@ const resolvers = {
             })
         }
     },
-    User: {
-        posts(parent,args,{ db },info) {
-            return db.posts.filter((post) => {
-                return post.author === parent.id
-            })
-        }
-    },
+    // User: ,
     Comment: {
         author(parent,args,{ db },info) {
             return db.users.find((user) => {
