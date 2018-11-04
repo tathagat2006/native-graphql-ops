@@ -111,68 +111,9 @@ import uuidv4 from 'uuid/v4'
 // `
 
 //Using custom types
-const typeDefs = `
-    type Query {
-        comments(query: String): [Comment!]!
-        users(query: String): [User!]!
-        posts(query:String): [Post]!
-        greeting(name: String): String!
-        add(numbers: [Float!]!): Float!
-        grades: [Int!]!
-        me: User!
-        post: Post!
-    }
+// const typeDefs = `
 
-    type Mutation {
-        createUser(data: CreateUserInput!): User!
-        deleteUser(id: ID!): User!
-        createPost(data: CreatePostInput!): Post!
-        deletePost(id:ID!): Post!
-        createComment(data: CreateCommentInput!): Comment!
-        deleteComment(id: ID!): Comment!
-    }
-
-    input CreateUserInput {
-        name: String!
-        email: String!
-        age: Int
-    }
-
-    input CreatePostInput: {
-        titile: String!
-        body: String!
-        published: Boolean!
-        author: ID!
-    }
-
-    input CreateCommentInput {
-        text: String!
-        author: ID!
-        post: ID!
-    }
-
-    type User {
-        id: ID!
-        name: String!
-        email: String!
-        age: Int
-        posts: [Post!]!
-    }
-
-    type Post {
-        id: ID!
-        title: String!
-        body: String!
-        published: Boolean!
-        author: User!
-    }
-
-    type Comment {
-        id: ID!
-        text: String!
-        author: User!
-    }
-`
+// `
 
 
 //Resolvers(functions for each query)
@@ -408,7 +349,7 @@ const resolvers = {
 //Start our server
 
 const server = new GraphQLServer({
-    typeDefs,
+    typeDefs: './src/schema.graphql',
     resolvers
 })
 

@@ -24,8 +24,8 @@ input CreateUserInput {
     age: Int
 }
 
-input CreatePostInput: {
-    titile: String!
+input CreatePostInput {
+    title: String!
     body: String!
     published: Boolean!
     author: ID!
