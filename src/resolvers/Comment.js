@@ -10,3 +10,5 @@ post(parent,args,{ db },info) {
     })
 }
 }
+
+export { Comment as default }
