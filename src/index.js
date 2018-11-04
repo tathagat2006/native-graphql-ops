@@ -172,7 +172,7 @@ const resolvers = {
 
            const deletedUsers = db.users.splice(userIdx, 1)
            //delete all associated posts
-           posts = db.posts.filter((post) => {
+           db.posts = db.posts.filter((post) => {
                const match = post.author === args.id
                if(match) {
                    comments = db.comments.filter((comment) => {
@@ -181,7 +181,7 @@ const resolvers = {
                    return !match
                }
            })
-           comments = db.comments.filter((comment) => {
+           db.comments = db.comments.filter((comment) => {
                return comment.author !== args.id
            })
            return deletedUsers[0]
@@ -222,17 +222,6 @@ const resolvers = {
 
 
         },
-        deleteComment(parent, args, { db }, info) {
-            const commentIndex = db.comments.findIndex((comment) => comment.id === args.id)
-
-            if (commentIndex === -1) {
-                throw new Error('Comment not found')
-            }
-
-            const deletedComments = db.comments.splice(commentIndex, 1)
-
-            return deletedComments[0]
-        },
         createComment(parent,args,{ db },info) {
             const userExist = db.users.some((user) => {
                 return user.id === args.data.author
@@ -253,6 +242,18 @@ const resolvers = {
             return post
         }
     },
+    deleteComment(parent, args, { db }, info) {
+        const commentIndex = db.comments.findIndex((comment) => comment.id === args.id)
+
+        if (commentIndex === -1) {
+            throw new Error('Comment not found')
+        }
+
+        const deletedComments = db.comments.splice(commentIndex, 1)
+
+        return deletedComments[0]
+    },
+
     Post: {
         author(parent,args,{ db },info) {
             return db.users.find((user) => {
