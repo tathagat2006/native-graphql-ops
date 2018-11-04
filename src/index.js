@@ -17,7 +17,7 @@ console.log(subtract(9,6))
 //Main App code starts here
 
 //Demo user data
-const users = [
+let users = [
     {
         id: '1',
         name: 'Tathagat',
@@ -39,7 +39,7 @@ const users = [
 
 //Demo posts data
 
-const posts = [
+let posts = [
     {
         id: 'p1',
         title: 'post1',
@@ -63,7 +63,7 @@ const posts = [
     },
 ]
 
-const comments = [
+let comments = [
     {
         id: 'c1',
         text: 'this is an awesome comment',
@@ -125,6 +125,7 @@ const typeDefs = `
 
     type Mutation {
         createUser(data: CreateUserInput!): User!
+        deleteUser(id: ID!): User!
         createPost(data: CreatePostInput!): Post!
         createComment(data: CreateCommentInput!): Comment!
     }
@@ -286,6 +287,31 @@ const resolvers = {
 
             return user
 
+
+        },
+        deleteUser(parent,args,ctx,info) {
+            const userIdx = users.findIndex((user) => {
+                return user.id === args.id
+            })
+            if(userIdx === -1) {
+                throw new Error("User not found...")
+            }
+
+           const deletedUsers = users.splice(userIdx, 1)
+           //delete all associated posts
+           posts = posts.filter((post) => {
+               const match = post.author === args.id
+               if(match) {
+                   comments = comments.filter((comment) => {
+                       comment.post !== post.id
+                   })
+                   return !match
+               }
+           })
+           comments = comments.filter((comment) => {
+               return comment.author !== args.id
+           })
+           return deletedUsers[0]
 
         },
         createPost(parent,args,ctx,info) {
