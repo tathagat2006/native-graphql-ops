@@ -129,7 +129,7 @@ updatePost(parent, args, { db }, info) {
 
     return post
 },
-createComment(parent,args,{ db },info) {
+createComment(parent,args,{ db, pubsub },info) {
     const userExist = db.users.some((user) => {
         return user.id === args.data.author
     })
@@ -146,6 +146,7 @@ createComment(parent,args,{ db },info) {
         ...args.data
     }
     db.comments.push(comment)
+    pubsub.publish(`comment ${args.data.post}`, { comment })
     return post
 },
 deleteComment(parent, args, { db }, info) {
