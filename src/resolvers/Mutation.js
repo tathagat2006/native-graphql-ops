@@ -72,7 +72,7 @@ updateUser(parent, args, { db }, info) {
 
     return user
 },
-createPost(parent,args,{ db },info) {
+createPost(parent,args,{ db, pubsub },info) {
     const userExist = db.users.some((user) => {
         return user.id === args.data.author
     })
@@ -89,6 +89,11 @@ createPost(parent,args,{ db },info) {
     }
 
     db.posts.push(post)
+    if(args.data.published) {
+        pubsub.publish('post', {
+            post
+        })
+    }
     return post
 },
 deletePost(parent,args,{ db },info) {
