@@ -99,7 +99,7 @@ createPost(parent,args,{ db, pubsub },info) {
     }
     return post
 },
-deletePost(parent,args,{ db },info) {
+deletePost(parent,args,{ db, pubsub },info) {
     const postIdx = post.findIndex((post) => {
         return post.id === args.id
     })
@@ -110,6 +110,15 @@ deletePost(parent,args,{ db },info) {
     const comments = db.comments.filter((comment) => {
         return comment.post !== args.id
     })
+
+    if(deletedPost[0].published) {
+        pubsub.published('post', {
+            post: {
+                mutation: "DELETED",
+                data: deletedPost[0]
+            }
+        })
+    }
     
     return deletedPost[0]
 
