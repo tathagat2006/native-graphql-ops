@@ -91,7 +91,10 @@ createPost(parent,args,{ db, pubsub },info) {
     db.posts.push(post)
     if(args.data.published) {
         pubsub.publish('post', {
-            post
+            post: {
+                mutation: "CREATED",
+                data: post
+            }
         })
     }
     return post
